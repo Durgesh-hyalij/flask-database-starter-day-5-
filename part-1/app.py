@@ -7,7 +7,7 @@ What You'll Learn:
 - Connecting Flask to SQLite database
 - Creating a table
 - Inserting data (Create)
-- Reading data (Read)
+- Reading data (Read)j
 
 Prerequisites: You should know Flask basics (routes, templates, render_template)
 """
@@ -17,7 +17,7 @@ import sqlite3  # Built-in Python library for SQLite database
 
 app = Flask(__name__)
 
-DATABASE = 'students.db'  # Database file name (will be created automatically)
+DATABASE = 'students.db'  # Database file name (will be created automatically if not exist)
 
 
 # =============================================================================
@@ -28,7 +28,7 @@ def get_db_connection():
     """Create a connection to the database"""
     conn = sqlite3.connect(DATABASE)  # Connect to database file
     conn.row_factory = sqlite3.Row  # This allows accessing columns by name (like dict)
-    return conn
+    return conn   #return conn means it will return something and any body can use that further init_db(), / , /add will use
 
 
 def init_db():
@@ -43,7 +43,7 @@ def init_db():
         )
     ''')  # SQL command to create table with 4 columns
     conn.commit()  # Save changes to database
-    conn.close()  # Close connection
+    conn.close()  # Close connection (so avoid memory fault)
 
 
 # =============================================================================
@@ -53,7 +53,7 @@ def init_db():
 @app.route('/')
 def index():
     """Home page - Display all students from database"""
-    conn = get_db_connection()  # Step 1: Connect to database
+    conn = get_db_connection()  # Step 1: Connect to database (open the database)
     students = conn.execute('SELECT * FROM students').fetchall()  # Step 2: Get all rows
     conn.close()  # Step 3: Close connection
     return render_template('index.html', students=students)
@@ -62,19 +62,25 @@ def index():
 @app.route('/add')
 def add_sample_student():
     """Add a sample student to database (for testing)"""
-    conn = get_db_connection()
+    conn = get_db_connection()   # Step 1: Connect to database (open the database)
     conn.execute(
         'INSERT INTO students (name, email, course) VALUES (?, ?, ?)',
-        ('John Doe', 'john@example.com', 'Python')  # ? are placeholders (safe from SQL injection)
+        ('Durgesh Hyalij', 'durgesh@example.com', 'Python')  # ? are placeholders (safe from SQL injection)
     )
     conn.commit()  # Don't forget to commit!
-    conn.close()
+    conn.close()    # Step 3: Close connection
     return 'Student added! <a href="/">Go back to home</a>'
 
 
 if __name__ == '__main__':
     init_db()  # Create table when app starts
     app.run(debug=True)
+
+
+
+
+
+
 
 
 # =============================================================================
