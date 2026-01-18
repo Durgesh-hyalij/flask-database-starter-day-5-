@@ -15,6 +15,7 @@ Install: pip install flask-sqlalchemy
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy  # Import SQLAlchemy
+from sqlalchemy.exc import IntegrityError # for validations and error check
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key'
@@ -33,14 +34,14 @@ db = SQLAlchemy(app)  # Initialize SQLAlchemy with app
 # =============================================================================
 
 class Course(db.Model):  # Course table
-    id = db.Column(db.Integer, primary_key=True)  # Auto-increment ID
+    id = db.Column(db.Integer, primary_key=True)  # Auto-increment ID ->when integer and primary key comes together it means it will auto increment 
     name = db.Column(db.String(100), nullable=False)  # Course name
     description = db.Column(db.Text)  # Optional description
 
     # Relationship: One Course has Many Students
-    students = db.relationship('Student', backref='course', lazy=True)
+    students = db.relationship('Student', backref='course', lazy=True)   # general structure -> <collection_name> = db.relationship('<RelatedModel>', backref='<reverse_name>', lazy=<loading_strategy>)
 
-    def __repr__(self):  # How to display this object
+    def __repr__(self):
         return f'<Course {self.name}>'
 
 
@@ -50,7 +51,7 @@ class Student(db.Model):  # Student table
     email = db.Column(db.String(120), unique=True, nullable=False)  # unique=True means no duplicates
 
     # Foreign Key: Links student to a course
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)  #<column_name> = db.Column(db.<Type>, db.ForeignKey('<parent_table>.<parent_pk>'), nullable=<True/False>)
 
     def __repr__(self):
         return f'<Student {self.name}>'
@@ -94,6 +95,7 @@ def add_student():
     return render_template('add.html', courses=courses)
 
 
+
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_student(id):
     # OLD WAY: conn.execute('SELECT * FROM students WHERE id = ?', (id,))
@@ -115,7 +117,7 @@ def edit_student(id):
 
 @app.route('/delete/<int:id>')
 def delete_student(id):
-    student = Student.query.get_or_404(id)
+    student = Student.query.get_or_404(id)   #This line fetches a Student by its ID, and if it does not exist, Flask automatically returns a 404 Not Found error.
     db.session.delete(student)  # Delete the object
     db.session.commit()
 
@@ -126,7 +128,7 @@ def delete_student(id):
 @app.route('/add-course', methods=['GET', 'POST'])
 def add_course():
     if request.method == 'POST':
-        name = request.form['name']
+        name = request.form.get('name')
         description = request.form.get('description', '')  # Optional field
 
         new_course = Course(name=name, description=description)
@@ -202,3 +204,12 @@ if __name__ == '__main__':
 # 2. Try different query methods: `filter()`, `order_by()`, `limit()`
 #
 # =============================================================================
+
+
+    
+#  Read this
+# course.teachers      # list of teachers for a course
+# teacher.course       # course of this teacher
+
+# course.students      # list of students
+# student.course       # course of this student

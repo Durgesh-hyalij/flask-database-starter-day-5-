@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Add Student - Part 3</title>
+    <title>Add Teacher - Part 3</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 40px; background: #f0f4f8; }
         h1 { color: #2c3e50; }
@@ -14,10 +14,9 @@
     </style>
 </head>
 <body>
-    <h1>Add New Student</h1>    
+    <h1>Add New Teacher</h1>
 
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
                 <div class="flash {{ category }}">{{ message }}</div>
@@ -26,27 +25,23 @@
     {% endwith %}
 
 
+    <form method = "POST" action='/add-teacher'>
+        <label>Name:</label>
+        <input type='text' name='name' placeholder='Enter the name' required>
 
+        <label>Email:</label>
+        <input type='email' name='email' placeholder='Enter email address' required>
 
-    <form method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="course_id">Course:</label>
-        <select id="course_id" name="course_id" required>
+        <label>Course:</label>
+        <select id = "course_id" name = 'course_id' required>
             <option value="">-- Select Course --</option>
             {% for course in courses %}
-                <option value="{{ course.id }}">{{ course.name }}</option>  <!-- Dropdown from database --> <!--It creates one dropdown option where the user sees the course name, but the server receives the course ID..-->
+                <option value=" {{ course.id }} ">{{ course.name }} </option>
             {% endfor %}
         </select>
-
-        <button type="submit" class="btn btn-submit">Add Student</button>
-        <a href="{{ url_for('index') }}" class="btn btn-cancel">Cancel</a>
+        <button type='submit'>Add Teacher</button>
+        <a href='{{url_for('teachers')}}'>cancel</a>
     </form>
+
 </body>
 </html>
-
-
