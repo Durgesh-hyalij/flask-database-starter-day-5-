@@ -1,5 +1,5 @@
 """
-Part 2: Full CRUD Operations with HTML Forms
+Part 2: Full CRUD Operations with HTML Forms    
 =============================================
 Complete Create, Read, Update, Delete operations with user forms.
 
@@ -23,8 +23,8 @@ DATABASE = 'students.db'
 
 
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
+    conn = sqlite3.connect(DATABASE)  #connect databasefile  
+    conn.row_factory = sqlite3.Row  
     return conn
 
 
@@ -46,25 +46,59 @@ def init_db():
 # CREATE - Add new student
 # =============================================================================
 
-@app.route('/add', methods=['GET', 'POST'])  # Allow both GET and POST
+@app.route('/add', methods=['GET', 'POST'])
 def add_student():
-    if request.method == 'POST':  # Form was submitted
-        name = request.form['name']  # Get data from form field named 'name'
-        email = request.form['email']
-        course = request.form['course']
+
+    if request.method == 'POST':
+
+        # 1️⃣ Get form data safely
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        course = request.form.get('course', '').strip()
+
+        # 2️⃣ REQUIRED FIELD VALIDATION
+        if not name or not email or not course:
+            flash('All fields are required', 'danger')
+            return redirect(url_for('add_student'))
+
+        # 3️⃣ NAME VALIDATION
+        if len(name) < 2:
+            flash('Name must be at least 2 characters long', 'danger')
+            return redirect(url_for('add_student'))
+
+        # 4️⃣ EMAIL FORMAT VALIDATION
+        if '@' not in email or '.' not in email:
+            flash('Please enter a valid email address', 'danger')
+            return redirect(url_for('add_student'))
 
         conn = get_db_connection()
+
+        # 5️⃣ DUPLICATE EMAIL VALIDATION (IMPORTANT)
+        existing_student = conn.execute(
+            'SELECT id FROM students WHERE email = ?',
+            (email,)
+        ).fetchone()
+
+        if existing_student:
+            conn.close()
+            flash('Email already exists. Please use another email.', 'danger')
+            return redirect(url_for('add_student'))
+
+        # 6️⃣ INSERT DATA (ONLY AFTER ALL VALIDATIONS PASS)
         conn.execute(
             'INSERT INTO students (name, email, course) VALUES (?, ?, ?)',
             (name, email, course)
         )
+
         conn.commit()
         conn.close()
 
-        flash('Student added successfully!', 'success')  # Show success message
-        return redirect(url_for('index'))  # Go back to home page
+        # 7️⃣ SUCCESS MESSAGE + REDIRECT
+        flash('Student added successfully!', 'success')
+        return redirect(url_for('index'))
 
-    return render_template('add.html')  # GET request: show empty form
+    # 8️⃣ GET REQUEST → SHOW EMPTY FORM
+    return render_template('add.html')
 
 
 # =============================================================================
@@ -77,6 +111,25 @@ def index():
     students = conn.execute('SELECT * FROM students ORDER BY id DESC').fetchall()  # Newest first
     conn.close()
     return render_template('index.html', students=students)
+
+# @app.route('/')
+# def index():
+#     search = request.args.get('search')  # Get search text from URL
+
+#     conn = get_db_connection()
+
+#     if search:
+#         students = conn.execute(
+#             "SELECT * FROM students WHERE name LIKE ?",
+#             (f"%{search}%",)
+#         ).fetchall()
+#     else:
+#         students = conn.execute(
+#             "SELECT * FROM students"
+#         ).fetchall()
+
+#     conn.close()
+#     return render_template('index.html', students=students)
 
 
 # =============================================================================
@@ -122,6 +175,23 @@ def delete_student(id):
     flash('Student deleted!', 'danger')  # Show delete message
     return redirect(url_for('index'))
 
+    
+@app.route('/search', methods=['GET'])
+def search():
+    name = request.args.get('name')  # get search text from URL
+    students = []
+
+    if name:
+        conn = get_db_connection()
+        students = conn.execute(
+            "SELECT * FROM students WHERE name LIKE ?",
+            (f"%{name}%",)
+        ).fetchall()
+        conn.close()
+        
+    return render_template("search.html", students=students)
+
+    
 
 if __name__ == '__main__':
     init_db()
@@ -168,3 +238,4 @@ if __name__ == '__main__':
 # 2. Add validation to check if email already exists before adding
 #
 # =============================================================================
+

@@ -21,6 +21,15 @@
 <body>
     <h1>Add New Student</h1>
 
+     <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <form method="POST">  <!-- POST sends data to server -->
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required placeholder="Enter student name">

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>search</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        h1 { color: #333; }
+        form { background: white; padding: 30px; border-radius: 8px; max-width: 400px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        input[type="text"], input[type="email"] {
+            width: 100%; padding: 10px; margin-bottom: 20px;
+            border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;
+        }
+        input:focus { border-color: #4CAF50; outline: none; }
+        .btn { padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; }
+        .btn-submit { background: #4CAF50; color: white; }
+        .btn-cancel { background: #ccc; color: #333; margin-left: 10px; }
+        .btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <h1>Search Student</h1>
+
+
+ <form method="GET" action="{{ url_for('search') }}">
+    <input type="text" name="name" placeholder="Enter student name" required>
+    <button type="submit">Search</button>
+</form>
+
+   {% if students %}
+    <h2>Search Results</h2>
+    <ul>
+        {% for student in students %}
+            <li>
+                <strong>{{ student.name }}</strong><br>
+                {{ student.email }} | {{ student.course }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No students found. ADD student : </p>
+    <p><button><a href="{{ url_for('add_student')}}" class="btn">ADD Student</a></button></p>
+{% endif %}
+
+<button><a href="{{ url_for('index') }}" class="btn">Home</a></button>
+
+
+    
+
+
