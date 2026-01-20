@@ -15,7 +15,7 @@ REST API with Flask for database operations (JSON responses)
 
 ## How to Run
 ```bash
-cd part-6
+cd part-4
 python app.py
 ```
 Open: http://localhost:5000

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Dashboard</title>
+
+    <!-- ================= CSS (UNCHANGED) ================= -->
+    <style>
+/* ================= GLOBAL RESET ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ================= BODY ================= */
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #0f172a, #020617);
+    color: #e5e7eb;
+    min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+header {
+    background: linear-gradient(135deg, #020617, #0f172a);
+    padding: 35px 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(56,189,248,0.2);
+    backdrop-filter: blur(10px);
+}
+
+header h1 {
+    font-size: 2.6em;
+    font-weight: 800;
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+}
+
+/* ================= CONTAINER ================= */
+.container {
+    max-width: 1400px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* ================= STATS ================= */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin-bottom: 50px;
+}
+
+.card {
+    background: linear-gradient(145deg, #1e293b, #020617);
+    padding: 35px 25px;
+    border-radius: 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(56,189,248,0.25);
+    transition: all 0.4s ease;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent, rgba(56,189,248,0.15), transparent);
+    transform: translateX(-100%);
+    transition: 0.6s;
+}
+
+.card:hover::before {
+    transform: translateX(100%);
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 25px 60px rgba(56,189,248,0.25);
+}
+
+.card h2 {
+    font-size: 3.2em;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card p {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+/* ================= SECTIONS ================= */
+.section {
+    background: rgba(30, 41, 59, 0.65);
+    backdrop-filter: blur(14px);
+    border-radius: 24px;
+    padding: 35px;
+    margin-bottom: 45px;
+    border: 1px solid rgba(56,189,248,0.15);
+    animation: fadeUp 0.6s ease;
+}
+
+.section h3 {
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    color: #38bdf8;
+}
+
+/* ================= INPUTS ================= */
+input, select {
+    width: 100%;
+    padding: 15px 18px;
+    border-radius: 14px;
+    border: 2px solid rgba(56,189,248,0.2);
+    background: rgba(15,23,42,0.9);
+    color: #e5e7eb;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+input::placeholder {
+    color: #64748b;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.15);
+}
+
+/* ================= BUTTONS ================= */
+button {
+    padding: 15px 26px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#searchBtn {
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    color: white;
+}
+
+#clearBtn {
+    background: transparent;
+    color: #94a3b8;
+    border: 2px solid rgba(148,163,184,0.4);
+}
+
+#addBookBtn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    width: 100%;
+}
+
+#addAuthorBtn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    width: 100%;
+}
+
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(56,189,248,0.35);
+}
+
+/* ================= TABLE ================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+th {
+    background: linear-gradient(135deg, #020617, #0f172a);
+    color: #38bdf8;
+    padding: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85em;
+}
+
+td {
+    padding: 16px;
+    border-bottom: 1px solid rgba(56,189,248,0.1);
+}
+
+tr {
+    transition: 0.3s;
+}
+
+tr:hover {
+    background: rgba(56,189,248,0.12);
+    transform: scale(1.01);
+}
+
+/* ================= PAGINATION ================= */
+#pageInfo {
+    padding: 10px 22px;
+    border-radius: 12px;
+    background: rgba(56,189,248,0.12);
+    color: #38bdf8;
+    font-weight: 700;
+}
+
+/* ================= STATES ================= */
+.loading, .empty-state {
+    text-align: center;
+    padding: 50px;
+    color: #94a3b8;
+    font-size: 1.1em;
+}
+
+/* ================= ANIMATION ================= */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.9em;
+    }
+
+    .section {
+        padding: 25px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Library Dashboard</h1>
+</header>
+
+<div class="container">
+
+    <!-- ===== Stats Cards ===== -->
+    <div class="stats">
+        <div class="card">
+            <h2 id="totalBooks">0</h2>
+            <p>Total Books</p>
+        </div>
+        <div class="card">
+            <h2 id="totalAuthors">0</h2>
+            <p>Total Authors</p>
+        </div>
+        <div class="card">
+            <h2 id="publishedYears">0</h2>
+            <p>Published Years</p>
+        </div>
+    </div>
+
+    <h1>Search by Title or Book or Year</h1>
+    <!-- ===== Search Section ===== -->
+    <div class="section">
+        <input type="text" id="searchTitle" placeholder="Search by title">
+        <input type="text" id="searchAuthor" placeholder="Search by author">
+        <input type="number" id="searchYear" placeholder="Year">
+
+          <!-- SORTING (ADD THIS) -->
+    <select id="sortBy">
+        <option value="id">Default</option>
+        <option value="title">Title</option>
+        <option value="year">Year</option>
+    </select>
+
+    <select id="sortOrder">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+
+        <button id="searchBtn">Search</button>
+        <button id="clearBtn">Clear</button>
+    </div>
+
+    <h1>Books Table</h1>
+    <!-- ===== Books Table ===== -->
+    <div class="section">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Year</th>
+                    <th>Author</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="booksTableBody">
+                <tr>
+                    <td colspan="4" class="loading">Loading books...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button id="prevPage">Previous</button>
+        <span id="pageInfo">Page 1</span>
+        <button id="nextPage">Next</button>
+    </div>
+
+    <h1>Authors Table</h1>
+    <!-- ===== Authors Table ===== -->
+    <div class="section">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>Total Books</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="authorsTableBody">
+                <tr>
+                    <td colspan="3" class="loading">Loading authors...</td>
+                </tr>
+            </tbody>
+        </table>
+        
+       
+            
+    <button id="authorPrev">Prev</button>
+    <span id="pageInfo">Page 1 of 1</span>
+    <button id="authorNext">Next</button>
+      
+    
+    </div>
+    <h1>ADD or UPDATE Books</h1>
+    <!-- ===== Add Book ===== -->
+    <div class="section">
+        <input type="text" id="bookTitle" placeholder="Book Title">
+        <input type="number" id="bookYear" placeholder="Year">
+        <input type="text" id="bookIsbn" placeholder="ISBN">
+        <select id="bookAuthorId">
+            <option value="">Select Author</option>
+        </select>
+        <button id="addBookBtn">Add Book</button>
+    </div>
+
+
+    <h1>ADD or UPDATE Authors</h1>
+    <!--ADD Author-->
+    <div class="section">
+        <input type="text" id = "authorName" placeholder="Author Name">
+        <input type="text" id = "authorBio" placeholder="Author Bio">
+        <input type="text" id = "authorCity" placeholder="Author City">
+
+        <button id = "addAuthorBtn">Add Author</button>
+    </div>
+    </div>
+
+    
+
+
+<!-- 🔗 External JavaScript file -->
+<script src="script.js"></script>
+
+</body>
+</html>

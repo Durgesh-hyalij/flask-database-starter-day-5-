@@ -1,0 +1,46 @@
+practice.py  -> has full code 
+app.py -> Manas sir code (for refernce , i donot change their anything)
+dashboard.html -> whole code for refernce 
+
+index.html -> full front end code
+script.js -> full javascript code
+
+remember
+here we are doing one thing that CORS concept
+because of browser security initially, we are not able to do any thing but then we do pip install flask-cors 
+
+
+FLOW
+
+Correct Flow (Beginner-friendly)
+
+1.HTML
+
+Takes input from the user (form, buttons, input fields)
+
+2.JavaScript (Frontend)
+
+Reads data from HTML
+
+Sends data to Backend using fetch() / AJAX
+
+3.Backend (Flask / Server)
+
+Receives request from JavaScript
+
+Processes data (database logic, validation, CRUD)
+
+Sends response back in JSON format
+
+4.JavaScript (Frontend)
+
+Receives JSON response from backend
+
+Updates HTML (table, text, alerts, UI changes)
+
+5.User
+
+Sees updated result on the screen
+
+JS (browser)  →  HTTP Request  →  Flask
+JS (browser)  ←  JSON Response ←  Flask
