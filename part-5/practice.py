@@ -97,6 +97,22 @@ def add_product():
 
     return render_template('add.html')
 
+@app.route('/edit/<int:id>' , methods=['GET' , 'POST'])
+def edit(id):
+    product = Product.query.get_or_404(id)
+    if request.method == 'POST':
+        product.name = request.form.get('name')
+        product.price = request.form.get('price')
+        product.stock = request.form.get('stock')
+        product.description = request.form.get('description')
+
+        db.session.commit()
+        return redirect(url_for('index'))
+    
+    return render_template("edit.html" , product = product)
+
+
+
 
 @app.route('/delete/<int:id>')
 def delete_product(id):

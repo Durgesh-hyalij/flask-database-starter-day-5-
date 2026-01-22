@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Product - {{ product.name }}</title>
+    <style>
+        /* matching your Part 5 theme */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #263238; 
+            color: #eceff1; 
+        }
+
+        .edit-container {
+            background: #37474f;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border-left: 5px solid #80cbc4;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 { 
+            color: #80cbc4; 
+            margin-top: 0;
+            font-weight: 300;
+            border-bottom: 1px solid #455a64;
+            padding-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #90a4ae;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #455a64;
+            background: #263238;
+            color: #fff;
+            box-sizing: border-box; /* ensures padding doesn't break width */
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #80cbc4;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: opacity 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-update {
+            background: #26a69a;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #546e7a;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="edit-container">
+        <h2>Edit Product</h2>
+
+        <form method="POST">
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" name="name" value="{{ product.name }}" required>
+            </div>
+
+            <div class="form-group" style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label>Price ($)</label>
+                    <input type="number" step="0.01" name="price" value="{{ product.price }}" required>
+                </div>
+                <div style="flex: 1;">
+                    <label>Current Stock</label>
+                    <input type="number" name="stock" value="{{ product.stock }}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description">{{ product.description }}</textarea>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-update">Update Product</button>
+                <a href="{{ url_for('index') }}" class="btn btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
