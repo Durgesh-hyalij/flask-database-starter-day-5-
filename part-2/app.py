@@ -1,4 +1,5 @@
 """
+durgesh -> main file app.py (runable)
 Part 2: Full CRUD Operations with HTML Forms    
 =============================================
 Complete Create, Read, Update, Delete operations with user forms.
@@ -46,7 +47,7 @@ def init_db():
 # CREATE - Add new student
 # =============================================================================
 
-@app.route('/add', methods=['GET', 'POST'])
+@app.route('/add', methods = ['GET' , 'POST'])
 def add_student():
 
     if request.method == 'POST':

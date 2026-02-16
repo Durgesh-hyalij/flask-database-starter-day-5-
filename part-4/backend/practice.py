@@ -6,12 +6,16 @@ from sqlalchemy import or_
 import jwt
 from datetime import timedelta
 from functools import wraps
+import os
 
 app = Flask(__name__)
+# DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///api_demo.db')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///api_demo.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'super-secret-key'
-
+    
 db = SQLAlchemy(app)
 CORS(app)
 
@@ -621,5 +625,6 @@ def init_db():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(debug=True) 
+    # app.run(debug=os.getenv('FLASK_DEBUG', 'True') == 'True')
 
